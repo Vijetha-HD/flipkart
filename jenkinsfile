@@ -4,7 +4,7 @@ pipeline {
         maven 'maven'
     }
     environment{
-        DOCKERHUB_USERNAME = "prakru07"
+        DOCKERHUB_USERNAME = "vijethahd"
     }
     stages {
         stage("clean") {
@@ -53,6 +53,14 @@ pipeline {
                     docker push ${DOCKERHUB_USERNAME}/phonepe
                     """
                 }
+                 post {
+                success{
+                    echo " pushed successfully"
+                }
+                failure{
+                    echo "not pushed"
+                }
+            }
             }
                 
         }
@@ -63,6 +71,14 @@ pipeline {
                 docker rmi -f phonepe
                 """
             }
+             post {
+                success{
+                    echo "removed image successfully"
+                }
+                failure{
+                    echo "image not removed"
+                }
+            }
         }
         stage("stop and restart"){
             steps {
@@ -71,7 +87,15 @@ pipeline {
                 docker run -it -d --name app -p 8081:8080 ${DOCKERHUB_USERNAME}/phonepe
                 """
             }
-        }
+            post {
+                success{
+                    echo "restared successfully"
+                }
+                failure{
+                    echo "not restarted built"
+                }
+            }
+            }
     }
     post {
         success {
